@@ -11,6 +11,7 @@ import config from './config.js';
 /* Connect to your database using mongoose */
 //see https://mongoosejs.com/docs/connections.html
 //See https://docs.atlas.mongodb.com/driver-connection/
+mongoose.connect(config.db.uri, { useNewUrlParser: true });
 
 /* 
   Instantiate a mongoose model for each listing object in the JSON file, 
@@ -19,6 +20,22 @@ import config from './config.js';
 
   Remember that we needed to read in a file like we did in Bootcamp Assignment #1.
  */
+var data = JSON.parse(fs.readFileSync('listings.json'));
+data.entries.forEach(element => {
+    new Listing({
+        code: element.code,
+        name: element.name,
+        coordinates: {
+            latitude: element.coordinates ? element.coordinates.latitude : null,
+            longitude: element.coordinates ? element.coordinates.longitude : null
+        },
+        address:element.address
+    }).save(function (err) {
+        if (err) return err;
+
+    });
+
+});
 
 /*  
   Check to see if it works: Once you've written + run the script, check out your local MongoDB database to ensure that
