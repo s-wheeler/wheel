@@ -5,7 +5,7 @@
  */
 import * as fs from 'fs';
 import mongoose from 'mongoose';
-import Listing from './ListingSchema.js';
+import listings from './ListingSchema.js';
 import config from './config.js';
 
 /* Connect to your database using mongoose */
@@ -22,14 +22,14 @@ mongoose.connect(config.db.uri, { useNewUrlParser: true });
  */
 var data = JSON.parse(fs.readFileSync('listings.json'));
 data.entries.forEach(element => {
-    new Listing({
+    new listings({
         code: element.code,
         name: element.name,
         coordinates: {
             latitude: element.coordinates ? element.coordinates.latitude : null,
             longitude: element.coordinates ? element.coordinates.longitude : null
         },
-        address:element.address
+        address: element.address
     }).save(function (err) {
         if (err) return err;
 
